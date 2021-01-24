@@ -1,4 +1,4 @@
-﻿using BepInEx;
+using BepInEx;
 using ItemModCreationBoilerplate.Equipment;
 using ItemModCreationBoilerplate.Items;
 using R2API;
@@ -33,7 +33,7 @@ namespace ItemModCreationBoilerplate
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ItemModCreationBoilerplate.my_assetbundlefile"))
             {
                 MainAssets = AssetBundle.LoadFromStream(stream);
-                var provider = new AssetBundleResourcesProvider("@MyModName", MainAssets);
+                var provider = new AssetBundleResourcesProvider($"@{ModName}", MainAssets);
                 ResourcesAPI.AddProvider(provider);
             }
 
