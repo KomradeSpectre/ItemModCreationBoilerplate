@@ -1,9 +1,6 @@
 ﻿using BepInEx.Configuration;
 using R2API;
 using RoR2;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ItemModCreationBoilerplate.Equipment
 {
@@ -23,15 +20,8 @@ namespace ItemModCreationBoilerplate.Equipment
 
         public override string EquipmentIconPath => "";
 
-        public override void Init(ConfigFile config)
-        {
-            CreateConfig(config);
-            CreateLang();
-            CreateEquipment();
-            Hooks();
-        }
 
-        public void CreateConfig(ConfigFile config)
+        protected override void CreateConfig(ConfigFile config)
         {
 
         }
@@ -41,7 +31,7 @@ namespace ItemModCreationBoilerplate.Equipment
             return new ItemDisplayRuleDict();
         }
 
-        public override void Hooks()
+        protected override void Initialization()
         {
 
         }
@@ -50,5 +40,7 @@ namespace ItemModCreationBoilerplate.Equipment
         {
             return false;
         }
+
+
     }
 }
