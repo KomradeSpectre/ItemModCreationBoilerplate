@@ -33,11 +33,29 @@ namespace ItemModCreationBoilerplate.Equipment
 
         public static EquipmentIndex Index;
 
-        public abstract void Init(ConfigFile config);
-
         public abstract ItemDisplayRuleDict CreateItemDisplayRules();
 
-        protected void CreateLang()
+        protected abstract void Initialization();
+
+        /// <summary>
+        /// Take care to call base.Init()!
+        /// </summary>
+        public virtual void Init(ConfigFile config)
+        {
+            CreateConfig(config);
+            CreateLang();
+            CreateEquipment();
+            Initialization();
+            Hooks();
+        }
+
+        protected abstract void CreateConfig(ConfigFile config);
+
+
+        /// <summary>
+        /// Take care to call base.CreateLang()!
+        /// </summary>
+        protected virtual void CreateLang()
         {
             LanguageAPI.Add("EQUIPMENT_" + EquipmentLangTokenName + "_NAME", EquipmentName);
             LanguageAPI.Add("EQUIPMENT_" + EquipmentLangTokenName + "_PICKUP", EquipmentPickupDesc);

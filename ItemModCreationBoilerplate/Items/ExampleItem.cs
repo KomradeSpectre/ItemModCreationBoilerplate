@@ -25,15 +25,12 @@ namespace ItemModCreationBoilerplate.Items
 
         public override string ItemIconPath => "";
 
-        public override void Init(ConfigFile config)
+        internal override void Init(ConfigFile config)
         {
-            CreateConfig(config);
-            CreateLang();
-            CreateItem();
-            Hooks();
+            base.Init(config);
         }
 
-        public void CreateConfig(ConfigFile config)
+        public override void CreateConfig(ConfigFile config)
         {
 
         }

@@ -23,15 +23,8 @@ namespace ItemModCreationBoilerplate.Equipment
 
         public override string EquipmentIconPath => "";
 
-        public override void Init(ConfigFile config)
-        {
-            CreateConfig(config);
-            CreateLang();
-            CreateEquipment();
-            Hooks();
-        }
 
-        public void CreateConfig(ConfigFile config)
+        protected override void CreateConfig(ConfigFile config)
         {
 
         }
@@ -39,6 +32,11 @@ namespace ItemModCreationBoilerplate.Equipment
         public override ItemDisplayRuleDict CreateItemDisplayRules()
         {
             return new ItemDisplayRuleDict();
+        }
+
+        protected override void Initialization()
+        {
+
         }
 
         public override void Hooks()
@@ -50,5 +48,7 @@ namespace ItemModCreationBoilerplate.Equipment
         {
             return false;
         }
+
+
     }
 }

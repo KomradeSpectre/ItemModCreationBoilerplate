@@ -26,9 +26,18 @@ namespace ItemModCreationBoilerplate.Items
 
         public virtual bool AIBlacklisted { get; set; } = false;
 
-        public abstract void Init(ConfigFile config);
+        protected abstract void Initialization();
 
-        protected void CreateLang()
+        internal virtual void Init(ConfigFile config)
+        {
+            CreateConfig(config);
+            CreateLang();
+            CreateItem();
+            Initialization();
+            Hooks();
+        }
+
+        protected virtual void CreateLang()
         {
             LanguageAPI.Add("ITEM_" + ItemLangTokenName + "_NAME", ItemName);
             LanguageAPI.Add("ITEM_" + ItemLangTokenName + "_PICKUP", ItemPickupDesc);
@@ -38,6 +47,7 @@ namespace ItemModCreationBoilerplate.Items
 
         public abstract ItemDisplayRuleDict CreateItemDisplayRules();
 
+        public abstract void CreateConfig(ConfigFile config);
         protected void CreateItem()
         {
             if (AIBlacklisted)
