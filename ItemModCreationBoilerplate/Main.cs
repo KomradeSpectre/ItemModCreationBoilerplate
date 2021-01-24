@@ -37,20 +37,28 @@ namespace ItemModCreationBoilerplate
                 ResourcesAPI.AddProvider(provider);
             }
 
-            //Item Initialization
-            ValidateItem(new ExampleItem(), Items);
+            //This section automatically scans the project for all items
+            var ItemTypes = Assembly.GetExecutingAssembly().GetTypes().Where(type => !type.IsAbstract && type.IsAssignableFrom(typeof(ItemBase)));
 
-            foreach (ItemBase item in Items)
+            foreach (var itemType in ItemTypes)
             {
-                item.Init(base.Config);
+                ItemBase item = (ItemBase)System.Activator.CreateInstance(itemType);
+                if (ValidateItem(item, Items))
+                {
+                    item.Init(Config);
+                }
             }
 
-            //Equipment Initialization
-            ValidateEquipment(new ExampleEquipment(), Equipments);
+            //this section automatically scans the project for all equipment
+            var EquipmentTypes = Assembly.GetExecutingAssembly().GetTypes().Where(type => !type.IsAbstract && type.IsAssignableFrom(typeof(EquipmentBase)));
 
-            foreach (EquipmentBase equipments in Equipments)
+            foreach (var equipmentType in EquipmentTypes)
             {
-                equipments.Init(base.Config);
+                EquipmentBase equipment = (EquipmentBase)System.Activator.CreateInstance(equipmentType);
+                if (ValidateEquipment(equipment, Equipments))
+                {
+                    equipment.Init(Config);
+                }
             }
         }
 
@@ -60,7 +68,7 @@ namespace ItemModCreationBoilerplate
         /// </summary>
         /// <param name="item">A new instance of an ItemBase class. e.g. "new ExampleItem()"</param>
         /// <param name="itemList">The list you would like to add this to if it passes the config check.</param>
-        public void ValidateItem(ItemBase item, List<ItemBase> itemList)
+        public bool ValidateItem(ItemBase item, List<ItemBase> itemList)
         {
             var enabled = Config.Bind<bool>("Item: " + item.ItemName, "Enable Item?", true, "Should this item appear in runs?").Value;
             var aiBlacklist = Config.Bind<bool>("Item: " + item.ItemName, "Blacklist Item from AI Use?", false, "Should the AI not be able to obtain this item?").Value;
@@ -72,6 +80,7 @@ namespace ItemModCreationBoilerplate
                     item.AIBlacklisted = true;
                 }
             }
+            return enabled;
         }
 
         /// <summary>
@@ -79,9 +88,14 @@ namespace ItemModCreationBoilerplate
         /// </summary>
         /// <param name="equipment">A new instance of an EquipmentBase class. E.g. "new ExampleEquipment()"</param>
         /// <param name="equipmentList">The list you would like to add this to if it passes the config check.</param>
-        public void ValidateEquipment(EquipmentBase equipment, List<EquipmentBase> equipmentList)
+        public bool ValidateEquipment(EquipmentBase equipment, List<EquipmentBase> equipmentList)
         {
-            if (Config.Bind<bool>("Equipment: " + equipment.EquipmentName, "Enable Equipment?", true, "Should this equipment appear in runs?").Value) { equipmentList.Add(equipment); }
+            if (Config.Bind<bool>("Equipment: " + equipment.EquipmentName, "Enable Equipment?", true, "Should this equipment appear in runs?").Value)
+            {
+                equipmentList.Add(equipment);
+                return true;
+            }
+            return false;
         }
 
     }
