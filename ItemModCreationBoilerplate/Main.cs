@@ -27,6 +27,8 @@ namespace ItemModCreationBoilerplate
 
         private void Awake()
         {
+            // Don't know how to create/use an asset bundle, or don't have a unity project set up?
+            // Look here for info on how to set these up: https://github.com/KomradeSpectre/AetheriumMod/blob/rewrite-master/Tutorials/Item%20Mod%20Creation.md#unity-project
 
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ItemModCreationBoilerplate.my_assetbundlefile"))
             {
