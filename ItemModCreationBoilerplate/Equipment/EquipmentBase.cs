@@ -47,7 +47,7 @@ namespace ItemModCreationBoilerplate.Equipment
             Hooks();
         }
 
-        protected abstract void CreateConfig(ConfigFile config);
+        protected virtual void CreateConfig(ConfigFile config){}
 
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace ItemModCreationBoilerplate.Equipment
 
         protected void CreateEquipment()
         {
-            EquipmentDef equipmentDef = new RoR2.EquipmentDef()
+            EquipmentDef equipmentDef = new EquipmentDef()
             {
                 name = "EQUIPMENT_" + EquipmentLangTokenName,
                 nameToken = "EQUIPMENT_" + EquipmentLangTokenName + "_NAME",
@@ -99,6 +99,6 @@ namespace ItemModCreationBoilerplate.Equipment
 
         protected abstract bool ActivateEquipment(EquipmentSlot slot);
 
-        public abstract void Hooks();
+        public virtual void Hooks() { }
     }
 }

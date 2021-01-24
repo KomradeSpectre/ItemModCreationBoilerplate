@@ -36,11 +36,6 @@ namespace ItemModCreationBoilerplate.Equipment
 
         }
 
-        public override void Hooks()
-        {
-
-        }
-
         protected override bool ActivateEquipment(EquipmentSlot slot)
         {
             return false;

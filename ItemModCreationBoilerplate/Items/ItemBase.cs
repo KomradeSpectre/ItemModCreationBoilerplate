@@ -27,6 +27,10 @@ namespace ItemModCreationBoilerplate.Items
 
         protected abstract void Initialization();
 
+        /// <summary>
+        /// Only override when you know what you are doing, or call base.Init()!
+        /// </summary>
+        /// <param name="config"></param>
         internal virtual void Init(ConfigFile config)
         {
             CreateConfig(config);
@@ -46,7 +50,7 @@ namespace ItemModCreationBoilerplate.Items
 
         public abstract ItemDisplayRuleDict CreateItemDisplayRules();
 
-        public abstract void CreateConfig(ConfigFile config);
+        public virtual void CreateConfig(ConfigFile config) { };
         protected void CreateItem()
         {
             if (AIBlacklisted)
@@ -71,7 +75,7 @@ namespace ItemModCreationBoilerplate.Items
             Index = ItemAPI.Add(new CustomItem(itemDef, itemDisplayRules));
         }
 
-        public abstract void Hooks();
+        public virtual void Hooks() { }
 
         //Based on ThinkInvis' methods
         public int GetCount(CharacterBody body)

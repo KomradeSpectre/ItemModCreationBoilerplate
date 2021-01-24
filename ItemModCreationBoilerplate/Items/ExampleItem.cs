@@ -22,10 +22,6 @@ namespace ItemModCreationBoilerplate.Items
 
         public override string ItemIconPath => "";
 
-        internal override void Init(ConfigFile config)
-        {
-            base.Init(config);
-        }
 
         public override void CreateConfig(ConfigFile config)
         {
@@ -37,9 +33,15 @@ namespace ItemModCreationBoilerplate.Items
             return new ItemDisplayRuleDict();
         }
 
+        protected override void Initialization()
+        {
+
+        }
+
         public override void Hooks()
         {
 
         }
+
     }
 }
