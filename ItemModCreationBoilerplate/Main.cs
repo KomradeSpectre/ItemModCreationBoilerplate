@@ -1,10 +1,10 @@
-using BepInEx;
+﻿using BepInEx;
 using ItemModCreationBoilerplate.Equipment;
 using ItemModCreationBoilerplate.Items;
 using R2API;
-using R2API.Networking;
 using R2API.Utils;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
