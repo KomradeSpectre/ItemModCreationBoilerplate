@@ -40,6 +40,8 @@ namespace ItemModCreationBoilerplate.Items
             Hooks();
         }
 
+        public virtual void CreateConfig(ConfigFile config) { }
+
         protected virtual void CreateLang()
         {
             LanguageAPI.Add("ITEM_" + ItemLangTokenName + "_NAME", ItemName);
@@ -49,8 +51,6 @@ namespace ItemModCreationBoilerplate.Items
         }
 
         public abstract ItemDisplayRuleDict CreateItemDisplayRules();
-
-        public virtual void CreateConfig(ConfigFile config) { };
         protected void CreateItem()
         {
             if (AIBlacklisted)
