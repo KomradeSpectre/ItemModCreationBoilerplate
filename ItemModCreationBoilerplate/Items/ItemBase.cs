@@ -15,7 +15,7 @@ namespace ItemModCreationBoilerplate.Items
         public abstract string ItemLore { get; }
 
         public abstract ItemTier Tier { get; }
-        public virtual ItemTag[] ItemTags { get; set; }
+        public virtual ItemTag[] ItemTags { get; set; } = new ItemTag[] { };
 
         public abstract string ItemModelPath { get; }
         public abstract string ItemIconPath { get; }
@@ -54,10 +54,13 @@ namespace ItemModCreationBoilerplate.Items
                 pickupModelPath = ItemModelPath,
                 pickupIconPath = ItemIconPath,
                 hidden = false,
-                tags = ItemTags,
                 canRemove = CanRemove,
                 tier = Tier
             };
+            if(ItemTags.Length > 0)
+            {
+                itemDef.tags = ItemTags;
+            }
             var itemDisplayRules = CreateItemDisplayRules();
             Index = ItemAPI.Add(new CustomItem(itemDef, itemDisplayRules));
         }
