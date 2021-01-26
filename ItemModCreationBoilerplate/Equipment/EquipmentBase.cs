@@ -1,8 +1,6 @@
 ﻿using BepInEx.Configuration;
 using R2API;
 using RoR2;
-using System;
-using System.Collections.Generic;
 
 namespace ItemModCreationBoilerplate.Equipment
 {
@@ -33,11 +31,29 @@ namespace ItemModCreationBoilerplate.Equipment
 
         public static EquipmentIndex Index;
 
-        public abstract void Init(ConfigFile config);
-
         public abstract ItemDisplayRuleDict CreateItemDisplayRules();
 
-        protected void CreateLang()
+        protected abstract void Initialization();
+
+        /// <summary>
+        /// Take care to call base.Init()!
+        /// </summary>
+        public virtual void Init(ConfigFile config)
+        {
+            CreateConfig(config);
+            CreateLang();
+            CreateEquipment();
+            Initialization();
+            Hooks();
+        }
+
+        protected virtual void CreateConfig(ConfigFile config){}
+
+
+        /// <summary>
+        /// Take care to call base.CreateLang()!
+        /// </summary>
+        protected virtual void CreateLang()
         {
             LanguageAPI.Add("EQUIPMENT_" + EquipmentLangTokenName + "_NAME", EquipmentName);
             LanguageAPI.Add("EQUIPMENT_" + EquipmentLangTokenName + "_PICKUP", EquipmentPickupDesc);
@@ -47,7 +63,7 @@ namespace ItemModCreationBoilerplate.Equipment
 
         protected void CreateEquipment()
         {
-            EquipmentDef equipmentDef = new RoR2.EquipmentDef()
+            EquipmentDef equipmentDef = new EquipmentDef()
             {
                 name = "EQUIPMENT_" + EquipmentLangTokenName,
                 nameToken = "EQUIPMENT_" + EquipmentLangTokenName + "_NAME",
@@ -83,6 +99,6 @@ namespace ItemModCreationBoilerplate.Equipment
 
         protected abstract bool ActivateEquipment(EquipmentSlot slot);
 
-        public abstract void Hooks();
+        public virtual void Hooks() { }
     }
 }

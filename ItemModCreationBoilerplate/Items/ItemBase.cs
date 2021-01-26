@@ -1,7 +1,6 @@
 ﻿using BepInEx.Configuration;
 using R2API;
 using RoR2;
-using System;
 using System.Collections.Generic;
 
 namespace ItemModCreationBoilerplate.Items
@@ -26,9 +25,22 @@ namespace ItemModCreationBoilerplate.Items
 
         public virtual bool AIBlacklisted { get; set; } = false;
 
-        public abstract void Init(ConfigFile config);
+        protected abstract void Initialization();
 
-        protected void CreateLang()
+        /// <summary>
+        /// Only override when you know what you are doing, or call base.Init()!
+        /// </summary>
+        /// <param name="config"></param>
+        internal virtual void Init(ConfigFile config)
+        {
+            CreateConfig(config);
+            CreateLang();
+            CreateItem();
+            Initialization();
+            Hooks();
+        }
+
+        protected virtual void CreateLang()
         {
             LanguageAPI.Add("ITEM_" + ItemLangTokenName + "_NAME", ItemName);
             LanguageAPI.Add("ITEM_" + ItemLangTokenName + "_PICKUP", ItemPickupDesc);
@@ -38,6 +50,7 @@ namespace ItemModCreationBoilerplate.Items
 
         public abstract ItemDisplayRuleDict CreateItemDisplayRules();
 
+        public virtual void CreateConfig(ConfigFile config) { };
         protected void CreateItem()
         {
             if (AIBlacklisted)
@@ -65,7 +78,7 @@ namespace ItemModCreationBoilerplate.Items
             Index = ItemAPI.Add(new CustomItem(itemDef, itemDisplayRules));
         }
 
-        public abstract void Hooks();
+        public virtual void Hooks() { }
 
         //Based on ThinkInvis' methods
         public int GetCount(CharacterBody body)
