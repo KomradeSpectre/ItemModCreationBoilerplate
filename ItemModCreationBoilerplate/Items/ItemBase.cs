@@ -19,7 +19,7 @@ namespace ItemModCreationBoilerplate.Items
         public abstract string ItemModelPath { get; }
         public abstract string ItemIconPath { get; }
 
-        public ItemIndex Index;
+        public static ItemIndex Index;
 
         public virtual bool CanRemove { get; } = true;
 
