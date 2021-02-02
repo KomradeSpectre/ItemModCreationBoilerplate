@@ -81,21 +81,21 @@ namespace ItemModCreationBoilerplate.Items
         public virtual void Hooks() { }
 
         //Based on ThinkInvis' methods
-        public int GetCount(CharacterBody body)
+        public static int GetCount(CharacterBody body)
         {
             if (!body || !body.inventory) { return 0; }
 
             return body.inventory.GetItemCount(Index);
         }
 
-        public int GetCount(CharacterMaster master)
+        public static int GetCount(CharacterMaster master)
         {
             if (!master || !master.inventory) { return 0; }
 
             return master.inventory.GetItemCount(Index);
         }
 
-        public int GetCountSpecific(CharacterBody body, ItemIndex itemIndex)
+        public static int GetCountSpecific(CharacterBody body, ItemIndex itemIndex)
         {
             if (!body || !body.inventory) { return 0; }
 
