@@ -19,7 +19,7 @@ namespace ItemModCreationBoilerplate.Items
         public abstract string ItemModelPath { get; }
         public abstract string ItemIconPath { get; }
 
-        public static ItemIndex Index;
+        public ItemIndex Index;
 
         public virtual bool CanRemove { get; } = true;
 
@@ -81,21 +81,21 @@ namespace ItemModCreationBoilerplate.Items
         public virtual void Hooks() { }
 
         //Based on ThinkInvis' methods
-        public static int GetCount(CharacterBody body)
+        public int GetCount(CharacterBody body)
         {
             if (!body || !body.inventory) { return 0; }
 
             return body.inventory.GetItemCount(Index);
         }
 
-        public static int GetCount(CharacterMaster master)
+        public int GetCount(CharacterMaster master)
         {
             if (!master || !master.inventory) { return 0; }
 
             return master.inventory.GetItemCount(Index);
         }
 
-        public static int GetCountSpecific(CharacterBody body, ItemIndex itemIndex)
+        public int GetCountSpecific(CharacterBody body, ItemIndex itemIndex)
         {
             if (!body || !body.inventory) { return 0; }
 

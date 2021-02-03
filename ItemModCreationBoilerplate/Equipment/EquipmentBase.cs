@@ -29,7 +29,7 @@ namespace ItemModCreationBoilerplate.Equipment
 
         public virtual bool IsLunar { get; } = false;
 
-        public static EquipmentIndex Index;
+        public EquipmentIndex Index;
 
         public abstract ItemDisplayRuleDict CreateItemDisplayRules();
 
