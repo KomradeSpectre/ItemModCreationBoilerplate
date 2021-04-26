@@ -1,6 +1,8 @@
 ﻿using BepInEx.Configuration;
 using R2API;
 using RoR2;
+using UnityEngine;
+using static ItemModCreationBoilerplate.Main;
 
 namespace ItemModCreationBoilerplate.Equipment
 {
@@ -16,10 +18,17 @@ namespace ItemModCreationBoilerplate.Equipment
 
         public override string EquipmentLore => "";
 
-        public override string EquipmentModelPath => "";
+        public override GameObject EquipmentModel => MainAssets.LoadAsset<GameObject>("ExampleEquipmentPrefab.prefab");
 
-        public override string EquipmentIconPath => "";
+        public override Sprite EquipmentIcon => MainAssets.LoadAsset<Sprite>("ExampleEquipmentIcon.png");
 
+        public override void Init(ConfigFile config)
+        {
+            CreateConfig(config);
+            CreateLang();
+            CreateEquipment();
+            Hooks();
+        }
 
         protected override void CreateConfig(ConfigFile config)
         {
@@ -29,11 +38,6 @@ namespace ItemModCreationBoilerplate.Equipment
         public override ItemDisplayRuleDict CreateItemDisplayRules()
         {
             return new ItemDisplayRuleDict();
-        }
-
-        protected override void Initialization()
-        {
-
         }
 
         protected override bool ActivateEquipment(EquipmentSlot slot)

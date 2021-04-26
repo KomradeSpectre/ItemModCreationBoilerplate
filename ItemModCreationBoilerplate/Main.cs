@@ -13,7 +13,7 @@ namespace ItemModCreationBoilerplate
     [BepInPlugin(ModGuid, ModName, ModVer)]
     [BepInDependency(R2API.R2API.PluginGUID, R2API.R2API.PluginVersion)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [R2APISubmoduleDependency(nameof(ItemAPI), nameof(LanguageAPI), nameof(ResourcesAPI))]
+    [R2APISubmoduleDependency(nameof(ItemAPI), nameof(LanguageAPI))]
     public class Main : BaseUnityPlugin
     {
         public const string ModGuid = "com.MyUsername.MyModName";
@@ -33,8 +33,6 @@ namespace ItemModCreationBoilerplate
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ItemModCreationBoilerplate.my_assetbundlefile"))
             {
                 MainAssets = AssetBundle.LoadFromStream(stream);
-                var provider = new AssetBundleResourcesProvider($"@{ModName}", MainAssets);
-                ResourcesAPI.AddProvider(provider);
             }
 
             //This section automatically scans the project for all items

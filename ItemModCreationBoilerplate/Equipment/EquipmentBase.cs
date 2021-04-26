@@ -1,6 +1,7 @@
 ﻿using BepInEx.Configuration;
 using R2API;
 using RoR2;
+using UnityEngine;
 
 namespace ItemModCreationBoilerplate.Equipment
 {
@@ -12,8 +13,8 @@ namespace ItemModCreationBoilerplate.Equipment
         public abstract string EquipmentFullDescription { get; }
         public abstract string EquipmentLore { get; }
 
-        public abstract string EquipmentModelPath { get; }
-        public abstract string EquipmentIconPath { get; }
+        public abstract GameObject EquipmentModel { get; }
+        public abstract Sprite EquipmentIcon { get; }
 
         public virtual bool AppearsInSinglePlayer { get; } = true;
 
@@ -29,23 +30,21 @@ namespace ItemModCreationBoilerplate.Equipment
 
         public virtual bool IsLunar { get; } = false;
 
-        public EquipmentIndex Index;
+        public EquipmentDef EquipmentDef;
 
         public abstract ItemDisplayRuleDict CreateItemDisplayRules();
 
-        protected abstract void Initialization();
-
         /// <summary>
-        /// Take care to call base.Init()!
+        /// This method structures your code execution of this class. An example implementation inside of it would be:
+        /// <para>CreateConfig(config);</para>
+        /// <para>CreateLang();</para>
+        /// <para>CreateEquipment();</para>
+        /// <para>Hooks();</para>
+        /// <para>This ensures that these execute in this order, one after another, and is useful for having things available to be used in later methods.</para>
+        /// <para>P.S. CreateItemDisplayRules(); does not have to be called in this, as it already gets called in CreateEquipment();</para>
         /// </summary>
-        public virtual void Init(ConfigFile config)
-        {
-            CreateConfig(config);
-            CreateLang();
-            CreateEquipment();
-            Initialization();
-            Hooks();
-        }
+        /// <param name="config">The config file that will be passed into this from the main class.</param>
+        public abstract void Init(ConfigFile config);
 
         protected virtual void CreateConfig(ConfigFile config){}
 
@@ -63,37 +62,35 @@ namespace ItemModCreationBoilerplate.Equipment
 
         protected void CreateEquipment()
         {
-            EquipmentDef equipmentDef = new EquipmentDef()
-            {
-                name = "EQUIPMENT_" + EquipmentLangTokenName,
-                nameToken = "EQUIPMENT_" + EquipmentLangTokenName + "_NAME",
-                pickupToken = "EQUIPMENT_" + EquipmentLangTokenName + "_PICKUP",
-                descriptionToken = "EQUIPMENT_" + EquipmentLangTokenName + "_DESCRIPTION",
-                loreToken = "EQUIPMENT_" + EquipmentLangTokenName + "_LORE",
-                pickupModelPath = EquipmentModelPath,
-                pickupIconPath = EquipmentIconPath,
-                appearsInSinglePlayer = AppearsInSinglePlayer,
-                appearsInMultiPlayer = AppearsInMultiPlayer,
-                canDrop = CanDrop,
-                cooldown = Cooldown,
-                enigmaCompatible = EnigmaCompatible,
-                isBoss = IsBoss,
-                isLunar = IsLunar
-            };
-            var itemDisplayRules = CreateItemDisplayRules();
-            Index = ItemAPI.Add(new CustomEquipment(equipmentDef, itemDisplayRules));
+            EquipmentDef = ScriptableObject.CreateInstance<EquipmentDef>();
+            EquipmentDef.name = "EQUIPMENT_" + EquipmentLangTokenName;
+            EquipmentDef.nameToken = "EQUIPMENT_" + EquipmentLangTokenName + "_NAME";
+            EquipmentDef.pickupToken = "EQUIPMENT_" + EquipmentLangTokenName + "_PICKUP";
+            EquipmentDef.descriptionToken = "EQUIPMENT_" + EquipmentLangTokenName + "_DESCRIPTION";
+            EquipmentDef.loreToken = "EQUIPMENT_" + EquipmentLangTokenName + "_LORE";
+            EquipmentDef.pickupModelPrefab = EquipmentModel;
+            EquipmentDef.pickupIconSprite = EquipmentIcon;
+            EquipmentDef.appearsInSinglePlayer = AppearsInSinglePlayer;
+            EquipmentDef.appearsInMultiPlayer = AppearsInMultiPlayer;
+            EquipmentDef.canDrop = CanDrop;
+            EquipmentDef.cooldown = Cooldown;
+            EquipmentDef.enigmaCompatible = EnigmaCompatible;
+            EquipmentDef.isBoss = IsBoss;
+            EquipmentDef.isLunar = IsLunar;
+
+            ItemAPI.Add(new CustomEquipment(EquipmentDef, CreateItemDisplayRules()));
             On.RoR2.EquipmentSlot.PerformEquipmentAction += PerformEquipmentAction;
         }
 
-        private bool PerformEquipmentAction(On.RoR2.EquipmentSlot.orig_PerformEquipmentAction orig, RoR2.EquipmentSlot self, EquipmentIndex equipmentIndex)
+        private bool PerformEquipmentAction(On.RoR2.EquipmentSlot.orig_PerformEquipmentAction orig, RoR2.EquipmentSlot self, EquipmentDef equipmentDef)
         {
-            if (equipmentIndex == Index)
+            if (equipmentDef == EquipmentDef)
             {
                 return ActivateEquipment(self);
             }
             else
             {
-                return orig(self, equipmentIndex);
+                return orig(self, equipmentDef);
             }
         }
 

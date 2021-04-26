@@ -1,6 +1,8 @@
 ﻿using BepInEx.Configuration;
 using R2API;
 using RoR2;
+using UnityEngine;
+using static ItemModCreationBoilerplate.Main;
 
 namespace ItemModCreationBoilerplate.Items
 {
@@ -18,10 +20,17 @@ namespace ItemModCreationBoilerplate.Items
 
         public override ItemTier Tier => ItemTier.Tier1;
 
-        public override string ItemModelPath => "";
+        public override GameObject ItemModel => MainAssets.LoadAsset<GameObject>("ExampleItemPrefab.prefab");
 
-        public override string ItemIconPath => "";
+        public override Sprite ItemIcon => MainAssets.LoadAsset<Sprite>("ExampleItemIcon.png");
 
+        public override void Init(ConfigFile config)
+        {
+            CreateConfig(config);
+            CreateLang();
+            CreateItem();
+            Hooks();
+        }
 
         public override void CreateConfig(ConfigFile config)
         {
@@ -31,11 +40,6 @@ namespace ItemModCreationBoilerplate.Items
         public override ItemDisplayRuleDict CreateItemDisplayRules()
         {
             return new ItemDisplayRuleDict();
-        }
-
-        protected override void Initialization()
-        {
-
         }
 
         public override void Hooks()
