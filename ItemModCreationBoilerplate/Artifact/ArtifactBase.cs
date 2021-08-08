@@ -22,6 +22,7 @@ namespace ItemModCreationBoilerplate.Artifact
 
         public ArtifactDef ArtifactDef;
 
+        //For use only after the run has started.
         public bool ArtifactEnabled => RunArtifactManager.instance.IsArtifactEnabled(ArtifactDef);
 
         public abstract void Init(ConfigFile config);
