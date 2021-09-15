@@ -136,9 +136,10 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
             if (self.modelLocator && self.modelLocator.modelTransform && self.HasBuff(EliteBuffDef))
             {
                 var eliteOverlayManagers = self.gameObject.GetComponents<EliteOverlayManager>();
+                EliteOverlayManager eliteOverlayManager = null;
                 if (!eliteOverlayManagers.Any()) 
                 { 
-                    self.gameObject.AddComponent<EliteOverlayManager>();
+                   eliteOverlayManager = self.gameObject.AddComponent<EliteOverlayManager>();
                 }
                 else
                 {
@@ -159,7 +160,7 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
                     overlay.originalMaterial = EliteMaterial;
                     overlay.AddToCharacerModel(self.modelLocator.modelTransform.GetComponent<RoR2.CharacterModel>());
 
-                    var eliteOverlayManager = self.gameObject.AddComponent<EliteOverlayManager>();
+                    if (!eliteOverlayManager) { eliteOverlayManager = self.gameObject.AddComponent<EliteOverlayManager>(); }
                     eliteOverlayManager.Overlay = overlay;
                     eliteOverlayManager.Body = self;
                     eliteOverlayManager.EliteBuffDef = EliteBuffDef;
