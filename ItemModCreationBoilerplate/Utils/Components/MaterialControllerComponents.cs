@@ -10,7 +10,10 @@ namespace ItemModCreationBoilerplate.Utils.Components
     {
         public static void SetShaderKeywordBasedOnBool(bool enabled, Material material, string keyword)
         {
-            if (!material) { return; }
+            if (!material)
+            {
+                return;
+            }
 
             if (enabled)
             {
@@ -32,20 +35,12 @@ namespace ItemModCreationBoilerplate.Utils.Components
         {
             if (material && meshRenderer)
             {
-                if (meshRenderer is SkinnedMeshRenderer skinnedMeshRenderer)
-                {
-                    skinnedMeshRenderer.sharedMaterials = new Material[] { material };
-                }
-
-                if (meshRenderer is MeshRenderer meshRendererType)
-                {
-                    meshRendererType.material = material;
-                }
+                meshRenderer.materials[0] = material;
             }
         }
 
         /// <summary>
-        /// Attach this component to a gameObject and pass a meshrenderer in. It'll attempt to find the correct shader controller from the meshrenderer material, attach it if it finds it, and destroy itself.
+        /// Attach this component to a gameObject and pass a renderer in. It'll attempt to find the correct shader controller from the renderer material, attach it if it finds it, and destroy itself.
         /// </summary>
         public class HGControllerFinder : MonoBehaviour
         {
@@ -56,14 +51,7 @@ namespace ItemModCreationBoilerplate.Utils.Components
             {
                 if (Renderer)
                 {
-                    if (Renderer is MeshRenderer meshRendererType)
-                    {
-                        Material = meshRendererType.material;
-                    }
-                    if (Renderer is SkinnedMeshRenderer skinnedMeshRenderer)
-                    {
-                        Material = skinnedMeshRenderer.sharedMaterials[0];
-                    }
+                    Material = Renderer.materials[0];
 
                     if (Material)
                     {
@@ -596,6 +584,39 @@ namespace ItemModCreationBoilerplate.Utils.Components
             public Renderer Renderer;
             public string MaterialName;
 
+            public enum _SrcBlendFloatEnum
+            {
+                Zero = 0,
+                One = 1,
+                DstColor = 2,
+                SrcColor = 3,
+                OneMinusDstColor = 4,
+                SrcAlpha = 5,
+                OneMinusSrcColor = 6,
+                DstAlpha = 7,
+                OneMinusDstAlpha = 8,
+                SrcAlphaSaturate = 9,
+                OneMinusSrcAlpha = 10
+            }
+            public enum _DstBlendFloatEnum
+            {
+                Zero = 0,
+                One = 1,
+                DstColor = 2,
+                SrcColor = 3,
+                OneMinusDstColor = 4,
+                SrcAlpha = 5,
+                OneMinusSrcColor = 6,
+                DstAlpha = 7,
+                OneMinusDstAlpha = 8,
+                SrcAlphaSaturate = 9,
+                OneMinusSrcAlpha = 10
+            }
+            public _SrcBlendFloatEnum _Source_Blend_Mode;
+            public _DstBlendFloatEnum _Destination_Blend_Mode;
+
+            public int _InternalSimpleBlendMode;
+
             public Color _Tint;
             public bool _DisableRemapping;
             public Texture _MainTex;
@@ -683,6 +704,9 @@ namespace ItemModCreationBoilerplate.Utils.Components
             {
                 if (Material)
                 {
+                    _Source_Blend_Mode = (_SrcBlendFloatEnum)(int)Material.GetFloat("_SrcBlend");
+                    _Destination_Blend_Mode = (_DstBlendFloatEnum)(int)Material.GetFloat("_DstBlend");
+                    _InternalSimpleBlendMode = (int)Material.GetFloat("_InternalSimpleBlendMode");
                     _Tint = Material.GetColor("_TintColor");
                     _DisableRemapping = Material.IsKeywordEnabled("DISABLEREMAP");
                     _MainTex = Material.GetTexture("_MainTex");
@@ -735,6 +759,12 @@ namespace ItemModCreationBoilerplate.Utils.Components
                         GrabMaterialValues();
                         PutMaterialIntoMeshRenderer(Renderer, Material);
                     }
+
+                    Material.SetFloat("_SrcBlend", Convert.ToSingle(_Source_Blend_Mode));
+                    Material.SetFloat("_DstBlend", Convert.ToSingle(_Destination_Blend_Mode));
+
+                    Material.SetFloat("_InternalSimpleBlendMode", (float)_InternalSimpleBlendMode);
+
                     Material.SetColor("_TintColor", _Tint);
 
                     SetShaderKeywordBasedOnBool(_DisableRemapping, Material, "DISABLEREMAP");

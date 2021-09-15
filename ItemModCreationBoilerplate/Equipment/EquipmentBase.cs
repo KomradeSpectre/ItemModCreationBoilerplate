@@ -1,7 +1,11 @@
-﻿using BepInEx.Configuration;
+﻿using RoR2;
 using R2API;
-using RoR2;
+using System;
+using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
+using System.Linq;
+using BepInEx.Configuration;
 
 namespace ItemModCreationBoilerplate.Equipment
 {
@@ -97,5 +101,131 @@ namespace ItemModCreationBoilerplate.Equipment
         protected abstract bool ActivateEquipment(EquipmentSlot slot);
 
         public virtual void Hooks() { }
+
+        #region Targeting Setup
+        //Targeting Support
+        public virtual bool UseTargeting { get; } = false;
+        public GameObject TargetingIndicatorPrefabBase = null;
+        public enum TargetingType
+        {
+            Enemies,
+            Friendlies,
+        }
+        public virtual TargetingType TargetingTypeEnum { get; } = TargetingType.Enemies;
+
+        //Based on MysticItem's targeting code.
+        protected void UpdateTargeting(On.RoR2.EquipmentSlot.orig_Update orig, EquipmentSlot self)
+        {
+            orig(self);
+
+            if (self.equipmentIndex == EquipmentDef.equipmentIndex)
+            {
+                var targetingComponent = self.GetComponent<TargetingControllerComponent>();
+                if (!targetingComponent)
+                {
+                    targetingComponent = self.gameObject.AddComponent<TargetingControllerComponent>();
+                    targetingComponent.VisualizerPrefab = TargetingIndicatorPrefabBase;
+                }
+
+                if (self.stock > 0)
+                {
+                    switch (TargetingTypeEnum)
+                    {
+                        case (TargetingType.Enemies):
+                            targetingComponent.ConfigureTargetFinderForEnemies(self);
+                            break;
+                        case (TargetingType.Friendlies):
+                            targetingComponent.ConfigureTargetFinderForFriendlies(self);
+                            break;
+                    }
+                }
+                else
+                {
+                    targetingComponent.Invalidate();
+                    targetingComponent.Indicator.active = false;
+                }
+            }
+        }
+
+        public class TargetingControllerComponent : MonoBehaviour
+        {
+            public GameObject TargetObject;
+            public GameObject VisualizerPrefab;
+            public Indicator Indicator;
+            public BullseyeSearch TargetFinder;
+            public Action<BullseyeSearch> AdditionalBullseyeFunctionality = (search) => { };
+
+            public void Awake()
+            {
+                Indicator = new Indicator(gameObject, null);
+            }
+
+            public void OnDestroy()
+            {
+                Invalidate();
+            }
+
+            public void Invalidate()
+            {
+                TargetObject = null;
+                Indicator.targetTransform = null;
+            }
+
+            public void ConfigureTargetFinderBase(EquipmentSlot self)
+            {
+                if (TargetFinder == null) TargetFinder = new BullseyeSearch();
+                TargetFinder.teamMaskFilter = TeamMask.allButNeutral;
+                TargetFinder.teamMaskFilter.RemoveTeam(self.characterBody.teamComponent.teamIndex);
+                TargetFinder.sortMode = BullseyeSearch.SortMode.Angle;
+                TargetFinder.filterByLoS = true;
+                float num;
+                Ray ray = CameraRigController.ModifyAimRayIfApplicable(self.GetAimRay(), self.gameObject, out num);
+                TargetFinder.searchOrigin = ray.origin;
+                TargetFinder.searchDirection = ray.direction;
+                TargetFinder.maxAngleFilter = 10f;
+                TargetFinder.viewer = self.characterBody;
+            }
+
+            public void ConfigureTargetFinderForEnemies(EquipmentSlot self)
+            {
+                ConfigureTargetFinderBase(self);
+                TargetFinder.teamMaskFilter = TeamMask.GetUnprotectedTeams(self.characterBody.teamComponent.teamIndex);
+                TargetFinder.RefreshCandidates();
+                TargetFinder.FilterOutGameObject(self.gameObject);
+                AdditionalBullseyeFunctionality(TargetFinder);
+                PlaceTargetingIndicator(TargetFinder.GetResults());
+            }
+
+            public void ConfigureTargetFinderForFriendlies(EquipmentSlot self)
+            {
+                ConfigureTargetFinderBase(self);
+                TargetFinder.teamMaskFilter = TeamMask.none;
+                TargetFinder.teamMaskFilter.AddTeam(self.characterBody.teamComponent.teamIndex);
+                TargetFinder.RefreshCandidates();
+                TargetFinder.FilterOutGameObject(self.gameObject);
+                AdditionalBullseyeFunctionality(TargetFinder);
+                PlaceTargetingIndicator(TargetFinder.GetResults());
+
+            }
+
+            public void PlaceTargetingIndicator(IEnumerable<HurtBox> TargetFinderResults)
+            {
+                HurtBox hurtbox = TargetFinderResults.Any() ? TargetFinderResults.First() : null;
+
+                if (hurtbox)
+                {
+                    TargetObject = hurtbox.healthComponent.gameObject;
+                    Indicator.visualizerPrefab = VisualizerPrefab;
+                    Indicator.targetTransform = hurtbox.transform;
+                }
+                else
+                {
+                    Invalidate();
+                }
+                Indicator.active = hurtbox;
+            }
+        }
+
+        #endregion Targeting Setup
     }
 }
