@@ -10,6 +10,17 @@ using BepInEx.Configuration;
 
 namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
 {
+    public abstract class EliteEquipmentBase<T> : EliteEquipmentBase where T : EliteEquipmentBase<T>
+    {
+        public static T instance { get; private set; }
+
+        public EliteEquipmentBase()
+        {
+            if (instance != null) throw new InvalidOperationException("Singleton class \"" + typeof(T).Name + "\" inheriting EliteEquipmentBase was instantiated twice");
+            instance = this as T;
+        }
+    }
+
     public abstract class EliteEquipmentBase
     {
         public abstract string EliteEquipmentName { get; }
@@ -97,6 +108,7 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
             EliteBuffDef = ScriptableObject.CreateInstance<BuffDef>();
             EliteBuffDef.name = EliteAffixToken;
             EliteBuffDef.buffColor = new Color32(255, 255, 255, byte.MaxValue);
+            EliteBuffDef.iconSprite = EliteBuffIcon;
             EliteBuffDef.canStack = false;
 
             EliteEquipmentDef = ScriptableObject.CreateInstance<EquipmentDef>();
@@ -193,7 +205,6 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
             EliteDef.name = "ELITE_" + EliteAffixToken;
             EliteDef.modifierToken = "ELITE_" + EliteAffixToken + "_MODIFIER";
             EliteDef.eliteEquipmentDef = EliteEquipmentDef;
-            EliteDef.shaderEliteRampIndex = 0;
 
             var baseEliteTierDefs = EliteAPI.GetCombatDirectorEliteTiers();
             if (!CanAppearInEliteTiers.All(x => baseEliteTierDefs.Contains(x)))

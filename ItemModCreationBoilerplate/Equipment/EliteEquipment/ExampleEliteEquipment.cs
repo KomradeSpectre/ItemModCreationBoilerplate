@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
 {
-    class ExampleEliteEquipment : EliteEquipmentBase
+    class ExampleEliteEquipment : EliteEquipmentBase<ExampleEliteEquipment>
     {
         public override string EliteEquipmentName => "Their Instruction";
 

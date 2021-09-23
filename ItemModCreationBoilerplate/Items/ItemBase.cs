@@ -1,11 +1,28 @@
 ﻿using BepInEx.Configuration;
 using R2API;
 using RoR2;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace ItemModCreationBoilerplate.Items
 {
+
+    // The directly below is entirely from TILER2 API (by ThinkInvis) specifically the Item module. Utilized to implement instancing for classes.
+    // TILER2 API can be found at the following places:
+    // https://github.com/ThinkInvis/RoR2-TILER2
+    // https://thunderstore.io/package/ThinkInvis/TILER2/
+
+    public abstract class ItemBase<T> : ItemBase where T : ItemBase<T>
+    {
+        public static T instance { get; private set; }
+
+        public ItemBase()
+        {
+            if (instance != null) throw new InvalidOperationException("Singleton class \"" + typeof(T).Name + "\" inheriting ItemBase was instantiated twice");
+            instance = this as T;
+        }
+    }
     public abstract class ItemBase
     {
         public abstract string ItemName { get; }

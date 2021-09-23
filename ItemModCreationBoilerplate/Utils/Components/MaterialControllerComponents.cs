@@ -31,11 +31,11 @@ namespace ItemModCreationBoilerplate.Utils.Components
             }
         }
 
-        public static void PutMaterialIntoMeshRenderer(Renderer meshRenderer, Material material)
+        public static void PutMaterialIntoMeshRenderer(Renderer renderer, Material material)
         {
-            if (material && meshRenderer)
+            if (material && renderer)
             {
-                meshRenderer.materials[0] = material;
+                renderer.materials[0] = material;
             }
         }
 

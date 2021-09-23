@@ -9,6 +9,16 @@ using BepInEx.Configuration;
 
 namespace ItemModCreationBoilerplate.Equipment
 {
+    public abstract class EquipmentBase<T> : EquipmentBase where T : EquipmentBase<T>
+    {
+        public static T instance { get; private set; }
+
+        public EquipmentBase()
+        {
+            if (instance != null) throw new InvalidOperationException("Singleton class \"" + typeof(T).Name + "\" inheriting EquipmentBoilerplate/Equipment was instantiated twice");
+            instance = this as T;
+        }
+    }
     public abstract class EquipmentBase
     {
         public abstract string EquipmentName { get; }

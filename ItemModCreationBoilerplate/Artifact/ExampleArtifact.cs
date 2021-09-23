@@ -9,7 +9,7 @@ using static ItemModCreationBoilerplate.Main;
 
 namespace ItemModCreationBoilerplate.Artifact
 {
-    class ExampleArtifact : ArtifactBase
+    class ExampleArtifact : ArtifactBase<ExampleArtifact>
     {
         public static ConfigEntry<int> TimesToPrintMessageOnStart;
 

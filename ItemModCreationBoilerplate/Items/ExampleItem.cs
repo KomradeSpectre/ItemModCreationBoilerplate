@@ -6,7 +6,7 @@ using static ItemModCreationBoilerplate.Main;
 
 namespace ItemModCreationBoilerplate.Items
 {
-    public class ExampleItem : ItemBase
+    public class ExampleItem : ItemBase<ExampleItem>
     {
         public override string ItemName => "Deprecate Me Item";
 
