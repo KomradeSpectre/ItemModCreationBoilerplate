@@ -15,6 +15,7 @@ namespace ItemModCreationBoilerplate.Items
 
     public abstract class ItemBase<T> : ItemBase where T : ItemBase<T>
     {
+        //This, which you will see on all the -base classes, will allow both you and other modders to enter through any class with this to access internal fields/properties/etc as if they were a member inheriting this -Base too from this class.
         public static T instance { get; private set; }
 
         public ItemBase()
