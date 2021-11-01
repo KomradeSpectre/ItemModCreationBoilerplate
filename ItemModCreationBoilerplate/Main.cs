@@ -30,8 +30,13 @@ namespace ItemModCreationBoilerplate
         public List<EquipmentBase> Equipments = new List<EquipmentBase>();
         public List<EliteEquipmentBase> EliteEquipments = new List<EliteEquipmentBase>();
 
+        //Provides a direct access to this plugin's logger for use in any of your other classes.
+        public static BepInEx.Logging.ManualLogSource ModLogger;
+
         private void Awake()
         {
+            ModLogger = Logger;
+
             // Don't know how to create/use an asset bundle, or don't have a unity project set up?
             // Look here for info on how to set these up: https://github.com/KomradeSpectre/AetheriumMod/blob/rewrite-master/Tutorials/Item%20Mod%20Creation.md#unity-project
 
