@@ -50,8 +50,6 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
 
             //In this we create our own tier which we'll put our elites in. It has:
             //- 6 times the base elite cost.
-            //- 3 times the base elite damage boost.
-            //- 4.5 times the base elite health boost.
             //- It can only become available to spawn after the player has looped at least once.
 
             //Additional note: since this accepts an array, it supports multiple elite tier defs, but do not put a cost of 0 on the cost multiplier.
@@ -61,8 +59,6 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
                 new CombatDirector.EliteTierDef()
                 {
                     costMultiplier = CombatDirector.baseEliteCostMultiplier * 6,
-                    damageBoostCoefficient = CombatDirector.baseEliteDamageBoostCoefficient * 3,
-                    healthBoostCoefficient = CombatDirector.baseEliteHealthBoostCoefficient * 4.5f,
                     eliteTypes = Array.Empty<EliteDef>(),
                     isAvailable = SetAvailability
                 }

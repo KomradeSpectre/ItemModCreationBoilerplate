@@ -84,7 +84,7 @@ namespace ItemModCreationBoilerplate.Items
             ItemDef.pickupIconSprite = ItemIcon;
             ItemDef.hidden = false;
             ItemDef.canRemove = CanRemove;
-            ItemDef.tier = Tier;
+            ItemDef.deprecatedTier = Tier;
 
             if (ItemTags.Length > 0) { ItemDef.tags = ItemTags; }
 

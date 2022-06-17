@@ -76,6 +76,16 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
         /// </summary>
         public virtual Material EliteMaterial { get; set; } = null;
 
+        /// <summary>
+        /// How many more/less times the health should the elite have compared to its standard form?
+        /// </summary>
+        public virtual float HealthMultiplier { get; set; } = 1;
+
+        /// <summary>
+        /// How many more/less times the damage should the elite have compared to its standard form?
+        /// </summary>
+        public virtual float DamageMultiplier { get; set; } = 1;
+
         public EliteDef EliteDef;
 
         /// <summary>
@@ -229,7 +239,7 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
             EliteAPI.Add(new CustomElite(EliteDef, CanAppearInEliteTiers));
 
             EliteBuffDef.eliteDef = EliteDef;
-            BuffAPI.Add(new CustomBuff(EliteBuffDef));
+            ContentAddition.AddBuffDef(EliteBuffDef);
         }
 
 
